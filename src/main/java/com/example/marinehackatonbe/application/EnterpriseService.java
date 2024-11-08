@@ -1,6 +1,7 @@
 package com.example.marinehackatonbe.application;
 
 import com.example.marinehackatonbe.domain.Enterprise;
+import com.example.marinehackatonbe.dto.EnterpriseRankingResponse;
 import com.example.marinehackatonbe.global.exception.CustomException;
 import com.example.marinehackatonbe.global.exception.ExceptionContent;
 import com.example.marinehackatonbe.infrastructure.EnterpriseRepository;
@@ -41,5 +42,28 @@ public class EnterpriseService {
 		List<Enterprise> ranking = enterpriseRepository.findAll();
 		ranking.sort((e1, e2) -> Integer.compare(e2.getPoint(), e1.getPoint()));
 		return ranking;
+	}
+
+	public EnterpriseRankingResponse getEnterprisePointAndRanking(Long enterpriseId) {
+		List<Enterprise> rankingList = enterpriseRepository.findAll();
+		rankingList.sort((e1, e2) -> Integer.compare(e2.getPoint(), e1.getPoint()));
+
+		Enterprise enterprise = enterpriseRepository.findById(enterpriseId)
+			.orElseThrow(() -> new CustomException(ExceptionContent.NOT_FOUND_ENTERPRISE));
+
+		int ranking = rankingList.indexOf(enterprise) + 1; // 랭킹은 1부터 시작
+
+		if (ranking == 0) {
+			throw new CustomException(ExceptionContent.NOT_FOUND_ENTERPRISE);
+		}
+
+		return EnterpriseRankingResponse.builder()
+			.enterpriseId(enterprise.getId())
+			.name(enterprise.getName())
+			.realId(enterprise.getRealId())
+			.photoUrl(enterprise.getPhotoUrl())
+			.point(enterprise.getPoint())
+			.ranking(ranking)
+			.build();
 	}
 }

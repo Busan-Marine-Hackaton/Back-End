@@ -2,6 +2,7 @@ package com.example.marinehackatonbe.api;
 
 import com.example.marinehackatonbe.application.EnterpriseService;
 import com.example.marinehackatonbe.domain.Enterprise;
+import com.example.marinehackatonbe.dto.EnterpriseRankingResponse;
 import com.example.marinehackatonbe.global.domain.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -47,5 +48,14 @@ public class EnterpriseController {
 	@GetMapping("/ranking")
 	public ResponseEntity<CommonResponse<List<Enterprise>>> getRanking() {
 		return ResponseEntity.ok().body(CommonResponse.ofSuccess("기업 랭킹 조회에 성공하였습니다.", enterpriseService.getRanking()));
+	}
+
+	@Operation(summary = "기업 포인트 및 랭킹 조회", description = "주어진 기업 ID로 해당 기업의 포인트와 현재 랭킹을 반환합니다.")
+	@ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = EnterpriseRankingResponse.class)))
+	@GetMapping("/{enterpriseId}/ranking")
+	public ResponseEntity<CommonResponse<EnterpriseRankingResponse>> getEnterprisePointAndRanking(
+		@Parameter(description = "기업 ID", required = true) @PathVariable Long enterpriseId) {
+		EnterpriseRankingResponse response = enterpriseService.getEnterprisePointAndRanking(enterpriseId);
+		return ResponseEntity.ok().body(CommonResponse.ofSuccess("기업 포인트와 랭킹 조회 성공", response));
 	}
 }
