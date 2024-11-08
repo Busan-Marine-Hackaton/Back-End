@@ -1,6 +1,7 @@
 package com.example.marinehackatonbe.api;
 
 import com.example.marinehackatonbe.application.EnterpriseService;
+import com.example.marinehackatonbe.domain.Enterprise;
 import com.example.marinehackatonbe.global.domain.CommonResponse;
 import com.example.marinehackatonbe.global.exception.CustomException;
 import com.example.marinehackatonbe.global.exception.ExceptionContent;
@@ -12,6 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/enterprise")
@@ -39,5 +42,12 @@ public class EnterpriseController {
 		@Parameter(description = "기업 비밀번호", required = true) @RequestParam String password) {
 		Long enterpriseId = enterpriseService.login(name, realId, password);
 		return ResponseEntity.ok().body(CommonResponse.ofSuccess("로그인에 성공하였습니다.", enterpriseId));
+	}
+
+	@Operation(summary = "기업 랭킹 조회", description = "모든 기업의 포인트 랭킹을 반환합니다.")
+	@ApiResponse(responseCode = "200", description = "랭킹 조회 성공", content = @Content(schema = @Schema(implementation = List.class)))
+	@GetMapping("/ranking")
+	public ResponseEntity<CommonResponse<List<Enterprise>>> getRanking() {
+		return ResponseEntity.ok().body(CommonResponse.ofSuccess("기업 랭킹 조회에 성공하였습니다.", enterpriseService.getRanking()));
 	}
 }

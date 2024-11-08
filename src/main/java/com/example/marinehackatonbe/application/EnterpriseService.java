@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -33,5 +35,11 @@ public class EnterpriseService {
 		} else {
 			throw new CustomException(ExceptionContent.WRONG_PASSWORD);
 		}
+	}
+
+	public List<Enterprise> getRanking() {
+		List<Enterprise> ranking = enterpriseRepository.findAll();
+		ranking.sort((e1, e2) -> Integer.compare(e2.getPoint(), e1.getPoint()));
+		return ranking;
 	}
 }
