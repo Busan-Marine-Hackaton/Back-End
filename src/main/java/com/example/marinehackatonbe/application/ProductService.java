@@ -20,6 +20,7 @@ public class ProductService {
 	private final ProductRepository productRepository;
 	private final MemberRepository memberRepository;
 
+	@Transactional
 	public boolean buyProduct(Long memberId, Long productId) {
 		Member savedMember = memberRepository.findById(memberId)
 			.orElseThrow(() -> new CustomException(ExceptionContent.NOT_FOUND_MEMBER));

@@ -19,6 +19,7 @@ public class LocationService {
 		return locationRepository.findAll();
 	}
 
+	@Transactional
 	public void createLocation(LocationDto locationDto) {
 		Location location = Location.from(locationDto);
 		locationRepository.save(location);

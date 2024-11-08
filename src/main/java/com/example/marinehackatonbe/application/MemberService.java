@@ -31,14 +31,15 @@ public class MemberService {
 		Member newMember = Member.builder()
 			.name(name)
 			.password(password)
+			.point(0)
 			.build();
 		memberRepository.save(newMember);
 	}
 
-	public boolean login(String name, String password) {
+	public Long login(String name, String password) {
 		Member member = memberRepository.findByName(name)
 			.orElseThrow(() -> new CustomException(ExceptionContent.NOT_FOUND_MEMBER));
-		if(member.getPassword().equals(password)){ return true;}
+		if(member.getPassword().equals(password)){ return member.getId();}
 		else {
 			throw new CustomException(ExceptionContent.WRONG_PASSWORD);
 		}
@@ -50,6 +51,7 @@ public class MemberService {
 		return ranking;
 	}
 
+	@Transactional
 	public boolean uploadPhoto(Long memberId, MultipartFile photo) throws IOException {
 		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new CustomException(ExceptionContent.NOT_FOUND_MEMBER));;
