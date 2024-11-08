@@ -3,8 +3,6 @@ package com.example.marinehackatonbe.api;
 import com.example.marinehackatonbe.application.EnterpriseService;
 import com.example.marinehackatonbe.domain.Enterprise;
 import com.example.marinehackatonbe.global.domain.CommonResponse;
-import com.example.marinehackatonbe.global.exception.CustomException;
-import com.example.marinehackatonbe.global.exception.ExceptionContent;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

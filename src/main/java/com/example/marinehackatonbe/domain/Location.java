@@ -20,6 +20,8 @@ public class Location extends BaseTimeEntity {
 	private double startY;
 	private double endX;
 	private double endY;
+	private double x;
+	private double y;
 
 	private Integer springCount;
 
