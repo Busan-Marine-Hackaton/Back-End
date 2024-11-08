@@ -20,6 +20,8 @@ public class Enterprise extends BaseTimeEntity {
 
 	private String realId;
 
+	private String photoUrl;
+
 	private String password;
 
 	private Integer point;
