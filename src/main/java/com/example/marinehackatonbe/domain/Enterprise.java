@@ -1,8 +1,12 @@
 package com.example.marinehackatonbe.domain;
 
 import com.example.marinehackatonbe.global.domain.BaseTimeEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,7 +30,16 @@ public class Enterprise extends BaseTimeEntity {
 
 	private Integer point;
 
+	@JsonIgnore
+	@OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Member> members = new ArrayList<>();
+
 	public void addPoints(int points) {
 		this.point += points;
+	}
+
+	public void addMember(Member member) {
+		this.members.add(member);
+		member.setEnterprise(this);
 	}
 }

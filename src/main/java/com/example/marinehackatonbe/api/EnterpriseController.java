@@ -68,4 +68,22 @@ public class EnterpriseController {
 		enterpriseService.addEnterprisePoints(enterpriseId, points);
 		return ResponseEntity.ok().body(CommonResponse.ofSuccess("포인트가 성공적으로 추가되었습니다.", null));
 	}
+
+	@Operation(summary = "기업 리스트 조회", description = "이름의 가나다 순서대로 모든 기업의 리스트를 반환합니다.")
+	@ApiResponse(responseCode = "200", description = "기업 리스트 조회 성공", content = @Content(schema = @Schema(implementation = List.class)))
+	@GetMapping("/list")
+	public ResponseEntity<CommonResponse<List<Enterprise>>> getAllEnterprisesSortedByName() {
+		List<Enterprise> enterprises = enterpriseService.getAllEnterprisesSortedByName();
+		return ResponseEntity.ok().body(CommonResponse.ofSuccess("기업 리스트 조회 성공", enterprises));
+	}
+
+	@Operation(summary = "멤버를 기업에 소속시킴", description = "기업 ID와 멤버 ID를 받아서 멤버를 기업에 소속시킵니다.")
+	@ApiResponse(responseCode = "200", description = "멤버 소속 성공", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+	@PutMapping("/{enterpriseId}/assignMember")
+	public ResponseEntity<CommonResponse<Void>> assignMemberToEnterprise(
+		@Parameter(description = "기업 ID", required = true) @PathVariable Long enterpriseId,
+		@Parameter(description = "멤버 ID", required = true) @RequestParam Long memberId) {
+		enterpriseService.assignMemberToEnterprise(enterpriseId, memberId);
+		return ResponseEntity.ok().body(CommonResponse.ofSuccess("멤버가 성공적으로 기업에 소속되었습니다.", null));
+	}
 }

@@ -67,4 +67,12 @@ public class MemberService {
 		memberRepository.save(member);
 		return true;
 	}
+
+	@Transactional
+	public void addMemberPoints(Long memberId, int points) {
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new CustomException(ExceptionContent.NOT_FOUND_MEMBER));
+		member.addPoint(points);
+		memberRepository.save(member);
+	}
 }

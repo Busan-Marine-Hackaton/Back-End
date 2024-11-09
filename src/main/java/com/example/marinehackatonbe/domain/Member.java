@@ -22,8 +22,19 @@ public class Member extends BaseTimeEntity {
 
 	private Integer point;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "enterprise_id")
+	private Enterprise enterprise;
+
 	public void addPoint(int point) {
 		this.point += point;
+		if (this.enterprise != null) {
+			this.enterprise.addPoints(point); // 기업에 포인트 추가
+		}
+	}
+
+	public void setEnterprise(Enterprise enterprise) {
+		this.enterprise = enterprise;
 	}
 
 	public void deductPoint(int price) {

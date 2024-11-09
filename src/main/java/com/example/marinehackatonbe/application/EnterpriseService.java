@@ -1,24 +1,31 @@
 package com.example.marinehackatonbe.application;
 
 import com.example.marinehackatonbe.domain.Enterprise;
+import com.example.marinehackatonbe.domain.Member;
 import com.example.marinehackatonbe.dto.EnterpriseRankingResponse;
 import com.example.marinehackatonbe.global.exception.CustomException;
 import com.example.marinehackatonbe.global.exception.ExceptionContent;
 import com.example.marinehackatonbe.infrastructure.EnterpriseRepository;
+import com.example.marinehackatonbe.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class EnterpriseService {
 	private final EnterpriseRepository enterpriseRepository;
+	private final MemberRepository memberRepository;
 
 	@Transactional
 	public void createEnterprise(String name, String realId, String password) {
+		if (enterpriseRepository.existsByName(name)) {
+			throw new CustomException(ExceptionContent.DUPLICATE_ENTERPRISE_NAME);
+		}
 		Enterprise newEnterprise = Enterprise.builder()
 			.name(name)
 			.realId(realId)
@@ -26,6 +33,23 @@ public class EnterpriseService {
 			.point(0)
 			.build();
 		enterpriseRepository.save(newEnterprise);
+	}
+
+	public List<Enterprise> getAllEnterprisesSortedByName() {
+		return enterpriseRepository.findAll().stream()
+			.sorted((e1, e2) -> e1.getName().compareTo(e2.getName()))
+			.collect(Collectors.toList());
+	}
+
+	@Transactional
+	public void assignMemberToEnterprise(Long enterpriseId, Long memberId) {
+		Enterprise enterprise = enterpriseRepository.findById(enterpriseId)
+			.orElseThrow(() -> new CustomException(ExceptionContent.NOT_FOUND_ENTERPRISE));
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new CustomException(ExceptionContent.NOT_FOUND_MEMBER));
+
+		enterprise.addMember(member);
+		memberRepository.save(member);
 	}
 
 	public Long login(String name, String realId, String password) {

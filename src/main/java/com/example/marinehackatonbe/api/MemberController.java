@@ -68,4 +68,14 @@ public class MemberController {
 	public ResponseEntity<List<Member>> getRanking() {
 		return ResponseEntity.ok(memberService.getRanking());
 	}
+
+	@Operation(summary = "멤버 포인트 추가", description = "멤버 ID와 포인트를 받아 해당 멤버의 포인트를 추가합니다.")
+	@ApiResponse(responseCode = "200", description = "포인트 추가 성공", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+	@PutMapping("/{memberId}/addPoints")
+	public ResponseEntity<CommonResponse<Void>> addMemberPoints(
+		@Parameter(description = "멤버 ID", required = true) @PathVariable Long memberId,
+		@Parameter(description = "추가할 포인트", required = true) @RequestParam int points) {
+		memberService.addMemberPoints(memberId, points);
+		return ResponseEntity.ok().body(CommonResponse.ofSuccess("포인트가 성공적으로 추가되었습니다.", null));
+	}
 }

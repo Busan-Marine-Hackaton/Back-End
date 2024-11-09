@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface EnterpriseRepository extends JpaRepository<Enterprise, Long> {
 	Optional<Enterprise> findByNameAndRealId(String name, String realId);
+	boolean existsByName(String name);
 }
