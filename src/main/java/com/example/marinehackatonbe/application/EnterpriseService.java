@@ -66,4 +66,12 @@ public class EnterpriseService {
 			.ranking(ranking)
 			.build();
 	}
+
+	@Transactional
+	public void addEnterprisePoints(Long enterpriseId, int points) {
+		Enterprise enterprise = enterpriseRepository.findById(enterpriseId)
+			.orElseThrow(() -> new CustomException(ExceptionContent.NOT_FOUND_ENTERPRISE));
+
+		enterprise.addPoints(points);
+	}
 }

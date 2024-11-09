@@ -58,4 +58,14 @@ public class EnterpriseController {
 		EnterpriseRankingResponse response = enterpriseService.getEnterprisePointAndRanking(enterpriseId);
 		return ResponseEntity.ok().body(CommonResponse.ofSuccess("기업 포인트와 랭킹 조회 성공", response));
 	}
+
+	@Operation(summary = "기업 포인트 추가", description = "기업 ID와 포인트를 받아 해당 기업의 포인트를 추가합니다.")
+	@ApiResponse(responseCode = "200", description = "포인트 추가 성공", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+	@PutMapping("/{enterpriseId}/addPoints")
+	public ResponseEntity<CommonResponse<Void>> addEnterprisePoints(
+		@Parameter(description = "기업 ID", required = true) @PathVariable Long enterpriseId,
+		@Parameter(description = "추가할 포인트", required = true) @RequestParam int points) {
+		enterpriseService.addEnterprisePoints(enterpriseId, points);
+		return ResponseEntity.ok().body(CommonResponse.ofSuccess("포인트가 성공적으로 추가되었습니다.", null));
+	}
 }

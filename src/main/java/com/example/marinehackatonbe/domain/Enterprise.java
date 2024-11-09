@@ -26,4 +26,7 @@ public class Enterprise extends BaseTimeEntity {
 
 	private Integer point;
 
+	public void addPoints(int points) {
+		this.point += points;
+	}
 }
